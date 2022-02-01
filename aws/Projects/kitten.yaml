@@ -1,0 +1,81 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: |
+   Kittens Carousel Static Website version 1.0
+Parameters:
+  InstanceTypeParameter:
+    Type: String
+    Default: t2.micro
+    AllowedValues:
+      - t2.micro
+      - m1.small
+      - m1.large
+    Description: Enter t2.micro, m1.small, or m1.large. Default is t2.micro.
+  EnvType:
+    Description: Environment type.
+    Default: test
+    Type: String
+    AllowedValues:
+      - prod
+      - test
+      - dev
+    ConstraintDescription: must specify prod, dev or test.
+  
+Metadata:
+  Instances:
+     Description: "website server"
+  
+
+
+
+
+Resources: 
+  LogicalID:
+  Type: AWS::EC2::Instance
+  Properties:
+
+    AvailabilityZone: 
+      - us-east-1a
+      - us-west-1a
+
+    IamInstanceProfile: "String"
+    ImageId: "String"
+    InstanceInitiatedShutdownBehavior: "String"
+    InstanceType: "String"
+    Ipv6AddressCount: Number
+    Ipv6Addresses:
+      Ipv6Addresses
+    KernelId: "String"
+    KeyName: "String"
+    LaunchTemplate:
+      LaunchTemplateId: "String"
+      LaunchTemplateName: "String"
+      Version: "String"
+    LicenseSpecifications:
+      LicenseSpecifications
+    Monitoring: String
+    NetworkInterfaces:
+      NetworkInterfaces
+    PlacementGroupName: "String"
+    PrivateIpAddress: "String"
+    PropagateTagsToVolumeOnCreation: false
+    RamdiskId: "String"
+    SecurityGroupIds:
+      SecurityGroupIds
+    SecurityGroups:
+      SecurityGroups
+    SourceDestCheck: false
+    SsmAssociations:
+      SsmAssociations
+    SubnetId: "String"
+    Tags:
+      Tags
+    Tenancy: "String"
+    UserData: "String"
+    Volumes:
+      Volumes 
+
+  
+  
+Outputs: 
+  
+     
