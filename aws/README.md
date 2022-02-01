@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # AWS Projects
 
 List of projects within AWS workshop as follows;
@@ -13,4 +14,6 @@ List of projects within AWS workshop as follows;
 5. - [Project-503 : Capstone Project Blog Page App (Django) on AWS Environment](./Project-503-Capstone-Project-Blog-Page-App-(Django)-on-AWS-Environment/README.md) -->
 
 
+=======
+>>>>>>> ce9dc21a851c7da282faadce40e172464d5708ad
 

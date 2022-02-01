@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Project-101 : Kittens Carousel Static Website deployed on AWS EC2 using Cloudformation
 
 ## Description
@@ -100,3 +101,6 @@ Kittens Carousel is a static website application deployed with Apache Web Server
 ## Resources
 
 - [AWS Cloudformation User Guide](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/Welcome.html)
+=======
+
+>>>>>>> ce9dc21a851c7da282faadce40e172464d5708ad
