@@ -25,7 +25,7 @@ Resources:
           FromPort: 22
           ToPort: 22
           CidrIp: 0.0.0.0/0
-  KittyWebServerHost:
+  RomanNumeralsConverter:
     Type: AWS::EC2::Instance
     Properties:
       ImageId: ami-033b95fb8079dc481
@@ -43,14 +43,12 @@ Resources:
             #! /bin/bash
             yum update -y
             yum install httpd -y
-            
+
             FOLDER="https://raw.githubusercontent.com/fthyldz8935/my-projects/main/aws/Projects/Project-102-Roman-Numerals-Converter/"
             cd /var/www/html
             wget $FOLDER/index.html
-            wget $FOLDER/cat0.jpg
-            wget $FOLDER/cat1.jpg
-            wget $FOLDER/cat2.jpg
-            wget $FOLDER/cat3.png
+            wget $FOLDER/result.html
+            wget $FOLDER/app.py
             systemctl start httpd
             systemctl enable httpd
 
@@ -58,5 +56,5 @@ Outputs:
   WebsiteURL:
     Value: !Sub
       - http://${PublicAddress}
-      - PublicAddress: !GetAtt KittyWebServerHost.PublicDnsName
+      - PublicAddress: !GetAtt RomanNumeralsConverter.PublicDnsName
     Description: Kittens Carousel Application URL
