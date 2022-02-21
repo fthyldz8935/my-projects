@@ -1,0 +1,63 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: |
+  The Roman Numerals Converter Application
+  aims to convert the given number to the Roman numerals.
+  The application is to be coded in Python and 
+  deployed as a web application with Flask on 
+  AWS Elastic Compute Cloud (EC2) 
+  Instance using AWS Cloudformation and CLI Services.
+  
+Parameters:
+  KeyPair:
+    Description: Please Select Your Key Pair
+    Type: AWS::EC2::KeyPair::KeyName
+    Default: N.Virginia-fthyldz
+  
+Resources:
+  RomanNumeralsConverterSec:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Enable HTTP for Apache Web Server and SSH for secure connection.
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 0.0.0.0/0
+  
+  RomanNumeralsConverter:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: ami-033b95fb8079dc481
+      InstanceType: t2.micro
+      KeyName: !Ref KeyPair
+      SecurityGroupIds:
+        - !Ref RomanNumeralsConverterSec
+      Tags:
+        - Key: Name
+          Value: !Sub Web Server of ${AWS::StackName} Stack
+      UserData: 
+        Fn::Base64:
+          !Sub |
+            #! /bin/bash
+            yum update -y
+            yum install python -y
+            pip3 install Flask -y
+            cd /home/ec2-user
+            FOLDER="https://raw.githubusercontent.com/fthyldz8935/my-projects/main/aws/Projects/Project-001-Roman-Numerals-Converter/"
+            wget ${FOLDER}/app.py
+            mkdir templates && cd templates
+            wget $FOLDER/templates/index.html
+            wget $FOLDER/templates/result.html
+            cd ..
+            python3 app.py
+
+Outputs:
+  WebsiteURL:
+    Value: !Sub
+      - http://${PublicAddress}
+      - PublicAddress: !GetAtt RomanNumeralsConverter.PublicDnsName
+    Description: Roman Numerals Converter Application URL
