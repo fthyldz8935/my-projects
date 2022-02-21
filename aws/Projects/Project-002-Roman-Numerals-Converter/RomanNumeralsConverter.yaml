@@ -39,7 +39,7 @@ Resources:
         - !Ref RomanNumeralsConverterSec
       Tags:
         - Key: Name
-          Value: !Sub Web Server of ${AWS::StackName} Stack
+          Value: !Sub Web Server of ${AWS::StackName} Roman Numerals Converter
 
       UserData: !Base64 |
            #! /bin/bash
