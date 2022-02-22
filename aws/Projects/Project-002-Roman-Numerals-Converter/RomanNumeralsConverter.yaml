@@ -18,7 +18,7 @@ Resources:
   RomanNumeralsConverterSec:
     Type: AWS::EC2::SecurityGroup
     Properties:
-      GroupDescription: Enable HTTP for Apache Web Server and SSH for secure connection.
+      GroupDescription: Enable HTTP for Flask Web Server and SSH for secure connection.
       SecurityGroupIngress:
         - IpProtocol: tcp
           FromPort: 80
