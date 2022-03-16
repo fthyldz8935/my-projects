@@ -1,0 +1,92 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: |
+    Cloudformation Template for Lumi's carousel static website on S3. This static website is distributed by cloudfront. Cloudfront DNS is published by Route 53 using full domain name.
+
+Parameters:
+    DomainName:
+      Description: AWS Route 53 hosted zone ex. ftihyildiz.com
+      Type: AWS::Route53::HostedZone::Id
+    LumisDomainName:
+      Description: Full domain name for the Application exapmle lumis.ftihyildiz.com
+      Type: String
+      AllowedPattern: (?!-)[a-zA-Z0-9-.]{1,63}(?<!-)
+
+Resources:
+  LumisBucket:
+    Type: "AWS::S3::Bucket"
+    Properties: 
+      AccessControl: PublicRead
+      BucketName: !Ref LumisDomainName
+      WebsiteConfiguration: 
+         IndexDocument: index.html
+  LumisBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref LumisBucket
+      PolicyDocument: 
+        Statement:
+          - Sid: PublicReadGetObject
+            Effect: Allow
+            Principal: '*'
+            Action: s3:GetObject
+            Resource: !Join ['', ['arn:aws:s3:::', !Ref 'LumisBucket', /*]]
+  LumisCertificate:
+    Type: "AWS::CertificateManager::Certificate"
+    Properties:
+      CertificateTransparencyLoggingPreference: ENABLED
+      
+      DomainName: !Ref LumisDomainName 
+      DomainValidationOptions:
+        - DomainName: !Ref LumisDomainName
+          HostedZoneId: !Ref DomainName
+      ValidationMethod: DNS
+  LumisCloudfront:
+    Type: "AWS::CloudFront::Distribution"
+    Properties:
+      DistributionConfig: #required
+        Aliases: 
+        - !Ref LumisDomainName
+        Comment: Cloudfront Distribution pointing to Lumis S3 bucket
+        DefaultCacheBehavior: 
+          AllowedMethods: 
+            - GET
+            - HEAD
+          Compress: true
+          ForwardedValues: 
+            Cookies: 
+              Forward: none
+            QueryString: true
+          TargetOriginId: LumisOrigin
+          ViewerProtocolPolicy: allow-all
+        DefaultRootObject: index.html
+        Enabled: true
+        HttpVersion: 'http2'
+        Origins: 
+        - DomainName: !Select [2, !Split ["/", !GetAtt LumisBucket.WebsiteURL]]
+          Id: LumisOrigin
+          CustomOriginConfig:
+            OriginProtocolPolicy: http-only
+        PriceClass: PriceClass_All
+        ViewerCertificate: 
+          AcmCertificateArn: !Ref LumisCertificate
+          SslSupportMethod: sni-only
+  LumisDNSName:
+    Type: AWS::Route53::RecordSetGroup
+    Properties:
+      HostedZoneId: !Ref DomainName
+      RecordSets: 
+        - Name: !Ref LumisDomainName
+          Type: A
+          AliasTarget:
+            HostedZoneId: Z2FDTNDATAQYW2
+            DNSName: !GetAtt LumisCloudfront.DomainName 
+Outputs:
+  BucketName: 
+    Description: S3 Bucket URL for Lumis Website
+    Value: !GetAtt LumisBucket.WebsiteURL
+  CloudfrontEndpoint:
+    Description: Endpoint for Lumis Cloudfront
+    Value: !GetAtt LumisCloudfront.DomainName
+  FullDomainName:
+    Description: Full Domain Name of my Application
+    Value: !Ref LumisDomainName
